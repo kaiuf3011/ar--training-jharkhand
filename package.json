@@ -1,0 +1,14 @@
+{
+  "name": "jharkhand-safety-ar",
+  "version": "1.4.0",
+  "private": true,
+  "description": "Clickable prototype: worker AR safety training app, supervisor QR verification and admin compliance console.",
+  "type": "module",
+  "scripts": {
+    "build": "node build.mjs",
+    "preview": "node build.mjs && python3 -m http.server 8080 --directory dist"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}

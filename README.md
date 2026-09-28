@@ -1,19 +1,45 @@
-# AR Training Prototype
+# Jharkhand Safety AR — prototype
 
-This is a prototype web application containing Augmented Reality features.
+Clickable prototype of an industrial safety training platform for Jharkhand's mining, steel, manufacturing and mica-processing sectors:
+
+- **Worker app** (Android, phone camera AR): Fire & Explosion and Gas Leak & Confined Space missions, assessment, certification, offline mode with auto-sync, English / हिंदी / ᱥᱟᱱᱛᱟᱲᱤ
+- **Supervisor app**: QR certificate verification, crew clearance, site compliance
+- **Admin console**: compliance command center — workers, sites, training content, assessments, certifications, alerts, analytics, localization, reports
+- **Design system**: tokens and components
+
+All data is sample data. The AR camera feed is simulated.
 
 ## Files
-- `prototype/index.html`: Main HTML entry point
-- `prototype/styles.css`: Styling
-- `prototype/ar.js`: Augmented Reality logic
-- `prototype/core.js`: Core application logic
-- `prototype/console.js`: Console interactions
-- `prototype/worker.js`: Web worker for background tasks
 
-## Running Locally
-You can run this project locally by starting a simple HTTP server in the `prototype` directory:
+| Path | What it is |
+|---|---|
+| `prototype/index.html` | Page source (body markup + head tags) |
+| `prototype/styles.css` | Design tokens and all component styles |
+| `prototype/core.js` | Shared state, icons, i18n strings, sample data, QR, AR scene drawings |
+| `prototype/worker.js` | Worker app screens, navigation, assessment, QR scanner |
+| `prototype/ar.js` | AR engine and the fire / gas mission logic |
+| `prototype/console.js` | Prototype shell, supervisor app, admin console, design system |
+| `build.mjs` | Builds `prototype/` into a standalone static site in `dist/` (no dependencies) |
+| `vercel.json` | Vercel build, output and caching config |
+
+## Run locally
+
 ```bash
-cd prototype
-python3 -m http.server 8080
+npm run preview
 ```
-Then navigate to http://localhost:8080 in your browser.
+
+Then open http://localhost:8080. Deep links: `/#worker`, `/#supervisor`, `/#admin`, `/#system`.
+
+## Deploy to Vercel
+
+The site is static; the build only needs Node 18+ and installs nothing.
+
+**From GitHub:** push this repo, then in Vercel choose *Add New → Project*, import the repo and deploy. `vercel.json` already sets the build command (`npm run build`) and output directory (`dist`), so leave the framework preset as *Other*.
+
+**From the CLI:**
+
+```bash
+npm i -g vercel
+vercel          # preview deployment
+vercel --prod   # production
+```
