@@ -1,0 +1,33 @@
+services:
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: jsar
+      POSTGRES_PASSWORD: jsar
+      POSTGRES_DB: jharkhand_safety_ar
+    ports:
+      - "5432:5432"
+    volumes:
+      - jsar_pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U jsar -d jharkhand_safety_ar"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  api:
+    build: .
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      ENV: production
+      DATABASE_URL: postgresql+psycopg://jsar:jsar@db:5432/jharkhand_safety_ar
+      # Demo-only secret — override for anything beyond a local docker-compose demo.
+      JWT_SECRET: docker-compose-demo-secret-change-me
+      PUBLIC_BASE_URL: http://localhost:8000
+    ports:
+      - "8000:8000"
+
+volumes:
+  jsar_pgdata:

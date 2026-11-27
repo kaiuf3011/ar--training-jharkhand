@@ -1,0 +1,20 @@
+# Pinned to what this project was built and tested against
+# (Python 3.14). Re-generate with `pip freeze` after any upgrade.
+
+fastapi==0.141.1
+uvicorn[standard]==0.54.0
+sqlalchemy==2.1.1
+alembic==1.20.0
+pydantic==2.13.5
+pydantic-settings==2.15.0
+email-validator==2.3.0
+pyjwt==2.15.1
+python-multipart==0.0.32
+
+# Postgres driver (psycopg 3). SQLite (stdlib) is the default for local dev
+# and tests, so this is only imported once DATABASE_URL points at Postgres.
+psycopg[binary]==3.3.6
+
+# Testing
+pytest==9.1.1
+httpx==0.28.1

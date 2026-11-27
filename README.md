@@ -1,45 +1,77 @@
-# Jharkhand Safety AR — prototype
+# Jharkhand Safety AR
 
-Clickable prototype of an industrial safety training platform for Jharkhand's mining, steel, manufacturing and mica-processing sectors:
+Offline-first AR vocational safety training, competency assessment, and
+digital certification platform for industrial workers — built for Smart
+India Hackathon Problem Statement 26041.
 
-- **Worker app** (Android, phone camera AR): Fire & Explosion and Gas Leak & Confined Space missions, assessment, certification, offline mode with auto-sync, English / हिंदी / ᱥᱟᱱᱛᱟᱲᱤ
-- **Supervisor app**: QR certificate verification, crew clearance, site compliance
-- **Admin console**: compliance command center — workers, sites, training content, assessments, certifications, alerts, analytics, localization, reports
-- **Design system**: tokens and components
+Two things exist in this repo, both real and independently tested; how
+they fit together (and what's still scaffolding) is laid out in
+[`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) and
+[`docs/WHAT_IS_MOCKED.md`](docs/WHAT_IS_MOCKED.md) — **read the second one
+before demoing or grading this.**
 
-All data is sample data. The AR camera feed is simulated.
+## 1. The product — a clickable prototype ([`prototype/`](prototype/))
 
-## Files
-
-| Path | What it is |
-|---|---|
-| `prototype/index.html` | Page source (body markup + head tags) |
-| `prototype/styles.css` | Design tokens and all component styles |
-| `prototype/core.js` | Shared state, icons, i18n strings, sample data, QR, AR scene drawings |
-| `prototype/worker.js` | Worker app screens, navigation, assessment, QR scanner |
-| `prototype/ar.js` | AR engine and the fire / gas mission logic |
-| `prototype/console.js` | Prototype shell, supervisor app, admin console, design system |
-| `build.mjs` | Builds `prototype/` into a standalone static site in `dist/` (no dependencies) |
-| `vercel.json` | Vercel build, output and caching config |
-
-## Run locally
+A worker Android AR app (simulated in-browser), a supervisor QR-verification
+app, and a web admin compliance console, all sharing one connected state.
+Two full AR training scenarios are playable end to end: **Fire & Explosion
+Response** and **Gas Leak & Confined Space**.
 
 ```bash
-npm run preview
+npm run preview   # builds and serves prototype/ at http://localhost:8080
 ```
 
-Then open http://localhost:8080. Deep links: `/#worker`, `/#supervisor`, `/#admin`, `/#system`.
+Deep links: `/#worker`, `/#supervisor`, `/#admin`, `/#system` (design
+system). Deployable to Vercel as-is — see `vercel.json` / `build.mjs`.
 
-## Deploy to Vercel
+## 2. The backend — FastAPI + PostgreSQL ([`backend/`](backend/))
 
-The site is static; the build only needs Node 18+ and installs nothing.
-
-**From GitHub:** push this repo, then in Vercel choose *Add New → Project*, import the repo and deploy. `vercel.json` already sets the build command (`npm run build`) and output directory (`dist`), so leave the framework preset as *Other*.
-
-**From the CLI:**
+A real, tested compliance API: worker records, data-driven scenarios,
+server-authoritative scoring, an adaptive per-dimension competency engine,
+certificate issuance with public QR verification, and idempotent
+offline-sync replay.
 
 ```bash
-npm i -g vercel
-vercel          # preview deployment
-vercel --prod   # production
+cd backend
+python3 -m venv .venv && source .venv/bin/activate
+pip install -r requirements.txt
+alembic upgrade head
+python -m app.db.seed
+uvicorn app.main:app --reload   # http://localhost:8000/docs
+```
+
+```bash
+pytest -q   # 17 tests, isolated per-test SQLite DB
+```
+
+Postgres via Docker: `cd backend && docker compose up --build`. Full
+details, schema, and the security notes worth reading before any real
+deployment: [`backend/README.md`](backend/README.md).
+
+## What's not built yet, honestly
+
+- The browser prototype and the FastAPI backend are **not yet wired
+  together** — each is real and tested on its own.
+- No native Android/iOS AR app exists. [`unity/`](unity/) is a folder
+  structure plus a handful of interface contracts (vision detector, AR/VR
+  runtime abstraction, API client, offline sync queue) — nothing compiled,
+  nothing run on a device. See [`unity/README.md`](unity/README.md).
+- No computer-vision model exists — one interface, one explicitly-labeled
+  mock implementation.
+- No 3D assets exist. [`blender/`](blender/) is folder structure and
+  export conventions only.
+- The Postgres path is schema/driver-verified but was not run end-to-end
+  (no Docker daemon in the environment this was built in).
+
+Full breakdown, capability by capability: [`docs/WHAT_IS_MOCKED.md`](docs/WHAT_IS_MOCKED.md).
+
+## Repo layout
+
+```
+prototype/   the clickable product — worker/supervisor/admin, real & tested
+backend/     FastAPI + PostgreSQL compliance API — real & tested
+unity/       native AR client — folder structure + contracts, NOT built
+blender/     3D asset pipeline — folder structure only, NOT modeled
+docs/        architecture + honest capability status
+build.mjs    builds prototype/ into dist/ for static hosting (Vercel etc.)
 ```

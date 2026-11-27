@@ -73,7 +73,9 @@ const ICONS = {
   more: '<circle cx="5" cy="12" r="1.2"/><circle cx="12" cy="12" r="1.2"/><circle cx="19" cy="12" r="1.2"/>',
   plus: '<path d="M12 5v14M5 12h14"/>',
   calendar: '<rect x="3" y="5" width="18" height="16" rx="1"/><path d="M3 10h18M8 3v4M16 3v4"/>',
-  grid: '<rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/>'
+  grid: '<rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/>',
+  sun: '<circle cx="12" cy="12" r="4.5"/><path d="M12 2v3M12 19v3M4.2 4.2l2.1 2.1M17.7 17.7l2.1 2.1M2 12h3M19 12h3M4.2 19.8l2.1-2.1M17.7 6.3l2.1-2.1"/>',
+  moon: '<path d="M20 14.5A8.5 8.5 0 1 1 9.5 4a7 7 0 0 0 10.5 10.5z"/>'
 };
 const ic = (n, cls = '') => `<svg class="ic ${cls}" viewBox="0 0 24 24" aria-hidden="true">${ICONS[n] || ''}</svg>`;
 
@@ -85,6 +87,7 @@ const BRAND_MARK = `<svg class="brand-mark" viewBox="0 0 32 32" aria-hidden="tru
 const TODAY = new Date(2026, 8, 26);
 const S = {
   mode: store.get('mode', 'worker'),
+  theme: store.get('theme', 'dark'),
   lang: store.get('lang', 'en'),
   online: false,               // worker starts underground — offline
   pending: 3,
@@ -203,6 +206,7 @@ function t(k, vars) {
 /* L() picks a localized string from an inline {en, hi, sat} object */
 const L = o => (typeof o === 'string' ? o : (o[S.lang] ?? o.en));
 function setLang(l) { S.lang = l; store.set('lang', l); document.documentElement.lang = l === 'hi' ? 'hi' : l === 'sat' ? 'sat' : 'en'; }
+function setTheme(t) { S.theme = t; store.set('theme', t); document.documentElement.setAttribute('data-theme', t); }
 
 /* ---------------------------------------------------------------
    Toasts

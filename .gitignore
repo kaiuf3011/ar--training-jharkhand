@@ -2,3 +2,27 @@ dist/
 node_modules/
 .vercel/
 .DS_Store
+
+# backend (Python)
+backend/.venv/
+backend/__pycache__/
+backend/**/__pycache__/
+backend/*.db
+backend/.env
+backend/htmlcov/
+backend/.pytest_cache/
+
+# Unity (folder structure is committed; generated junk is not)
+unity/Library/
+unity/Temp/
+unity/Obj/
+unity/Build/
+unity/Builds/
+unity/Logs/
+unity/UserSettings/
+unity/*.csproj
+unity/*.sln
+
+# Blender autosave/backup
+blender/**/*.blend1
+blender/**/*.blend2

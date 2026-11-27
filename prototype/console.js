@@ -30,9 +30,20 @@ const Shell = {
     const bar = $('#shell');
     bar.innerHTML = `<div class="brand">${BRAND_MARK}<div class="brand-txt">Jharkhand Safety AR<small>Industrial safety training system</small></div></div>
       <nav class="mode-tabs" aria-label="Experience">${[['worker', 'phone', 'Worker', 'app'], ['supervisor', 'qr', 'Supervisor', ''], ['admin', 'grid', 'Admin', 'console'], ['system', 'layers', 'Design', 'system']].map(([k, i, a, b]) => `<button data-mode="${k}" aria-pressed="${S.mode === k}">${ic(i)}<span>${a}</span>${b ? `<span class="lbl-long">${b}</span>` : ''}</button>`).join('')}</nav>
+      <button class="theme-btn" id="theme-btn" aria-label="Switch to ${S.theme === 'dark' ? 'light' : 'dark'} theme" aria-pressed="${S.theme === 'light'}">${ic('sun')}${ic('moon')}</button>
       <div class="shell-note">CLICKABLE PROTOTYPE · <b>SAMPLE DATA</b><br>ANDROID · SUPERVISOR · WEB ADMIN</div>`;
-    bar.addEventListener('click', e => { const b = e.target.closest('[data-mode]'); if (b) Shell.setMode(b.dataset.mode); });
+    bar.addEventListener('click', e => {
+      const b = e.target.closest('[data-mode]'); if (b) { Shell.setMode(b.dataset.mode); return; }
+      if (e.target.closest('#theme-btn')) Shell.toggleTheme();
+    });
+    setTheme(S.theme);
     Shell.render();
+  },
+  toggleTheme() {
+    const next = S.theme === 'dark' ? 'light' : 'dark';
+    setTheme(next);
+    const btn = $('#theme-btn');
+    if (btn) { btn.setAttribute('aria-pressed', next === 'light'); btn.setAttribute('aria-label', `Switch to ${next === 'dark' ? 'light' : 'dark'} theme`); }
   },
   setMode(m) {
     AR.stop();
